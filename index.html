@@ -3,6 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <title>Chatbot PHP + OpenAI</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f4f4f4;
+      border-radius: 8px;
+    }
+    h2 {
+      text-align: center;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    pre {
+      background: #fff;
+      padding: 15px;
+      border-radius: 4px;
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 <body>
   <h2>Chatbot</h2>
@@ -13,13 +38,24 @@
   <script>
     async function enviarMensaje() {
       const mensaje = document.getElementById("mensaje").value;
-      const res = await fetch("https://bottubasa.onrender.com/chatbot.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mensaje })
-      });
-      const data = await res.json();
-      document.getElementById("respuesta").innerText = data.respuesta || data.error;
+      if (!mensaje.trim()) {
+        document.getElementById("respuesta").innerText = "Por favor, escribe un mensaje.";
+        return;
+      }
+
+      try {
+        const res = await fetch("/chatbot.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mensaje })
+        });
+
+        const data = await res.json();
+        document.getElementById("respuesta").innerText = data.respuesta || data.error || "Sin respuesta.";
+      } catch (error) {
+        document.getElementById("respuesta").innerText = "Error al conectar con el servidor.";
+        console.error(error);
+      }
     }
   </script>
 </body>
