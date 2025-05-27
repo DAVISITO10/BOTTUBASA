@@ -1,13 +1,10 @@
-FROM php:8.1-cli
+FROM php:8.1-apache
 
-# Copia los archivos del proyecto al contenedor
-COPY . /var/www/html
+# Copia los archivos del proyecto al directorio web de Apache
+COPY . /var/www/html/
 
-# Cambia al directorio del proyecto
-WORKDIR /var/www/html
+# Activa el módulo de reescritura (opcional pero útil para .htaccess)
+RUN a2enmod rewrite
 
-# Expone el puerto 80
+# Expone el puerto 80 (ya lo hace internamente, así que no es obligatorio)
 EXPOSE 80
-
-# Usa PHP como servidor al ejecutar el contenedor
-CMD ["php", "-S", "0.0.0.0:80"]
